@@ -185,7 +185,14 @@ if __name__ == "__main__":
                     print(f'Processing {arg}...')
                 processFileName(arg)
             elif opt == "-o" or opt == "--out":
-                outfile = open(arg, mode)
+                if arg == '-':
+                    if outfile is not None:
+                        outfile.close()
+                        outfile = None
+                else:
+                    if outfile is not None:
+                        outfile.close()
+                    outfile = open(arg, mode)
             elif opt == "-n" or opt == "--noappend":
                 mode = 'w'
             elif opt == "-a" or opt == "--append":
