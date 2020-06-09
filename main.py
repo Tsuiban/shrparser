@@ -3,6 +3,17 @@ import sys
 
 outfile = None
 
+"""
+A lot of this parsing is fragile.  It could have been done much more elegantly.  The whole program is basically hacked
+together quickly so that I can get on with the data analysis.  You're welcome to make the code more elgant if you truly
+wish to.  It did what I needed at the moment, so was 'good enough' right now.
+
+Suggestions:
+    make the parsing table driven instead of hard coded.
+    
+    -- KNK --
+"""
+
 
 class Victim:
     def __init__(self, age=0, gender='', race='', ethnic=''):
