@@ -46,6 +46,10 @@ class Victim:
         v.parse(line)
         return v
 
+    @staticmethod
+    def headers(prefix_string):
+        s = f'{prefix_string}Age,{prefix_string}Gender,{prefix_string}Race,{prefix_string}Ethnicity'
+        return s
 
 class Offender(Victim):
     def __init__(self, age=0, gender='', race='', ethnic='', weapon=0, relationship='', circumstances=0,
@@ -57,7 +61,7 @@ class Offender(Victim):
         self.sub_circumstances = sub_circumstances
 
     def __repr__(self):
-        return f'{super().__repr__()},{self.weapon},{self.circumstances},{self.sub_circumstances}'
+        return f'{super().__repr__()},{self.weapon},{self.relationship},{self.circumstances},{self.sub_circumstances}'
 
     def parse(self, string):
         super().parse(string)
@@ -71,6 +75,11 @@ class Offender(Victim):
         o = Offender()
         o.parse(string)
         return o
+
+    @staticmethod
+    def headers(prefix_string):
+        return Victim.headers(
+            prefix_string) + f',{prefix_string}Weapon,{prefix_string}Relationship,{prefix_string}Circumstances,{prefix_string}Sub Circumstances'
 
 
 class Record:
@@ -122,6 +131,22 @@ class Record:
             outputString = outputString + o.__repr__()
 
         return outputString
+
+    @staticmethod
+    def headers():
+        s = "Indicator,State Code,ORI Code,Group,Division,Year,Population,County,MSA,MSA Indication," + \
+            "Agency,State Name,Offense Month,Last Update,Action Type,Homicide,Incident Number,Situation,"
+        vh = Victim.headers("Victim ")
+        s += vh + ","
+        oh = Offender.headers("Offender ")
+        s += oh + "," + \
+             "Victim Count,Offender Count,"
+        for i in range(10):
+            s += Victim.headers("Victim " + str(i + 2) + " ") + ","
+        for i in range(9):
+            s += Offender.headers("Offender " + str(i + 2) + " ") + ","
+        s += Offender.headers("Offender 10 ")
+        return s
 
 
 # noinspection PyUnresolvedReferences
@@ -204,6 +229,8 @@ if __name__ == "__main__":
                     if outfile is not None:
                         outfile.close()
                     outfile = open(arg, mode)
+                    outfile.write(Record.headers())
+                    outfile.write("\n")
             elif opt == "-n" or opt == "--noappend":
                 mode = 'w'
             elif opt == "-a" or opt == "--append":
